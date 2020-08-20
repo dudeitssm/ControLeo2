@@ -55,6 +55,10 @@
 * 1.00      Initial public release.
 * 1.1       Minor bug fixes
 * 1.2       Modified to work on ControLeo2 (21 October 2014)
+* 
+* modified 20 August 2020 for DIY Toner Transfer Etched Copperclad Build 
+* by dudeitssm (https://github.com/dudeitssm)
+* 
 *******************************************************************************/
 
 
@@ -116,7 +120,7 @@ reflowType_t reflowType = REFLOW_TYPE_LEAD_FREE;
 int reflowPhase;
 
 // Pin assignments
-int elementPins[NO_OF_ELEMENTS] = {4, 5, 6};
+int elementPins[NO_OF_ELEMENTS] = {0, 1, 2};
 
 unsigned long nextCheck = 0;
 unsigned long nextRead = 0;
@@ -137,8 +141,8 @@ void setup() {
   pinMode(CONTROLEO_BUTTON_TOP_PIN, INPUT_PULLUP);
   pinMode(CONTROLEO_BUTTON_BOTTOM_PIN, INPUT_PULLUP);
   // Set the relays as outputs and turn them off
-  // The relay outputs are on D4 to D7 (4 outputs)
-  for (int i=4; i<8; i++) {
+  // The relay outputs are on D0 to D2 (3 outputs)
+  for (int i=0; i<3; i++) {
     pinMode(i, OUTPUT);
     digitalWrite(i, LOW);
   }
@@ -372,5 +376,3 @@ void stopReflow()
   // Force the display to be updated
   nextCheck = 0;
 }
-
-
