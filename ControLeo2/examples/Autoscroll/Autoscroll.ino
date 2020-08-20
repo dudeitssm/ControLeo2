@@ -18,7 +18,7 @@
  by Peter Easton
  modified 20 August 2020 for DIY Toner Transfer Etched Copperclad Build
  by dudeitssm (https://github.com/dudeitssm)
-
+ 
  http://www.arduino.cc/en/Tutorial/LiquidCrystal
  */
 
@@ -71,3 +71,4 @@ void loop() {
   // clear screen for the next loop:
   lcd.clear();
 }
+
