@@ -36,7 +36,7 @@ void setup() {
   pinMode(CONTROLEO_BUTTON_TOP_PIN, INPUT_PULLUP);
   pinMode(CONTROLEO_BUTTON_BOTTOM_PIN, INPUT_PULLUP);
   // Set the relays as outputs and turn them off
-  // The relay outputs are on D4 to D7 (4 outputs)
+  // The relay outputs are on D0 to D2 (3 outputs)
   for (int i=0; i<3; i++) {
     pinMode(i, OUTPUT);
     digitalWrite(i, LOW);
