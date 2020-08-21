@@ -95,6 +95,10 @@
 * ========  ===========
 * 1.00      Initial public release.
 * 2.00      Public release.
+*
+* modified 20 August 2020 for DIY Toner Transfer Etched Copperclad Build 
+* by dudeitssm (https://github.com/dudeitssm)
+* 
 *******************************************************************************/
 
 // ***** INCLUDES *****
@@ -128,9 +132,9 @@ struct Hardware {
   ControLeo2_MAX31855 Thermocouple; // Specify MAX31855 thermocouple interface
 };
 Hardware hardware = { 0, {
-    4, // upper heater pin
-    5, // lower heater pin
-    6  // booster heater pin
+    1, // upper heater pin
+    0, // lower heater pin
+    2  // booster heater pin
   },
   ControLeo2_LiquidCrystal(),
   ControLeo2_MAX31855() };
@@ -220,8 +224,8 @@ void setup()
   pinMode(CONTROLEO_BUTTON_TOP_PIN, INPUT_PULLUP);
   pinMode(CONTROLEO_BUTTON_BOTTOM_PIN, INPUT_PULLUP);
   // Set the relays as outputs and turn them off
-  // The relay outputs are on D4 to D7 (4 outputs)
-  for (int i=4; i<8; i++) {
+  // The relay outputs are on D0 to D2 (3 outputs)
+  for (int i=0; i<3; i++) {
     pinMode(i, OUTPUT);
     digitalWrite(i, LOW);
   }
@@ -696,4 +700,3 @@ void AdvanceProfile(boolean silently)
     EEPROM.write(ADDR_CURR_PROFILE, currentState.SelectedProfile);
   }
 }
-
