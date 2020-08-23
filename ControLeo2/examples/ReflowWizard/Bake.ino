@@ -66,7 +66,7 @@ boolean Bake() {
       // Start the bake, regardless of the starting temperature
       // Get the types for the outputs (elements, fan or unused)
       for (i=0; i<4; i++)
-        outputType[i] = getSetting(SETTING_D4_TYPE + i);
+        outputType[i] = getSetting(SETTING_D0_TYPE + i);
       // Get the bake temperature
       bakeTemperature = getSetting(SETTING_BAKE_TEMPERATURE);
       // Get the bake duration
@@ -77,10 +77,10 @@ boolean Bake() {
       Serial.println(bakeDuration);
       
       // Don't allow bake if the outputs are not configured
-      for (i=0; i<4; i++)
+      for (i=0; i<3; i++)
         if (isHeatingElement(outputType[i]))
           break;
-      if (i == 4) {
+      if (i == 3) {
         lcdPrintLine(0, "Please configure");
         lcdPrintLine(1, " outputs first! ");
         Serial.println(F("Outputs must be configured before baking"));
@@ -92,9 +92,9 @@ boolean Bake() {
       }
 
       // If there is a convection fan then turn it on now
-      for (i=0; i< 4; i++) {
+      for (i=0; i< 3; i++) {
         if (outputType[i] == TYPE_CONVECTION_FAN)
-          digitalWrite(4 + i, HIGH);
+          digitalWrite(i, HIGH);
       }
       
       // Move to the next phase
@@ -110,9 +110,9 @@ boolean Bake() {
       counter = 0;
       
       // Stagger the element start cycle to avoid abrupt changes in current draw
-      // Simple method: there are 4 outputs so space them apart equally
-      for (i=0; i< 4; i++)
-        elementDutyCounter[i] = 25 * i;
+      // Simple method: there are 3 outputs so space them apart equally
+      for (i=0; i< 3; i++)
+        elementDutyCounter[i] = 33 * i;
       break;
 
     case BAKING_PHASE_HEATUP:
@@ -150,9 +150,9 @@ boolean Bake() {
           if (isHeating) {
             isHeating = false;
             // Turn all heating elements off
-            for (i=0; i< 4; i++) {
+            for (i=0; i< 3; i++) {
               if (isHeatingElement(outputType[i]))
-                digitalWrite(4 + i, LOW);
+                digitalWrite(i, LOW);
             }
 
             // The duty cycle caused the temperature to exceed the bake temperature, so decrease it
@@ -194,14 +194,14 @@ boolean Bake() {
       isHeating = false;
       
       // Turn off all elements and turn on the fans
-      for (i=0; i< 4; i++) {
+      for (i=0; i< 3; i++) {
         switch (outputType[i]) {
            case TYPE_CONVECTION_FAN:
            case TYPE_COOLING_FAN:
-             digitalWrite(4 + i, HIGH);
+             digitalWrite(i, HIGH);
              break;
            default:
-             digitalWrite(4 + i, LOW);
+             digitalWrite(i, LOW);
              break;
         }
       }
@@ -236,7 +236,7 @@ boolean Bake() {
       Serial.println(F("Bake is done!"));
       isHeating = false;
       // Turn all elements and fans off
-      for (i = 4; i < 8; i++)
+      for (i = 0; i < 3; i++)
         digitalWrite(i, LOW);
       // Close the oven door now, over 3 seconds
       setServoPosition(getSetting(SETTING_SERVO_CLOSED_DEGREES), 3000);
@@ -248,23 +248,23 @@ boolean Bake() {
  
   // Turn the outputs on or off based on the duty cycle
   if (isHeating) {
-    for (i=0; i< 4; i++) {
+    for (i=0; i< 3; i++) {
       switch (outputType[i]) {
         case TYPE_TOP_ELEMENT:
         case TYPE_BOTTOM_ELEMENT:
           // Turn the output on at 0, and off at the duty cycle value
           if (elementDutyCounter[i] == 0)
-            digitalWrite(4 + i, HIGH);
+            digitalWrite(i, HIGH);
           if (elementDutyCounter[i] == bakeDutyCycle)
-            digitalWrite(4 + i, LOW);
+            digitalWrite(i, LOW);
           break;
           
         case TYPE_BOOST_ELEMENT: // Give it half the duty cycle of the other elements
           // Turn the output on at 0, and off at the duty cycle value
           if (elementDutyCounter[i] == 0)
-            digitalWrite(4 + i, HIGH);
+            digitalWrite(i, HIGH);
           if (elementDutyCounter[i] == bakeDutyCycle/2)
-            digitalWrite(4 + i, LOW);
+            digitalWrite(i, LOW);
           break;
 
         default:
@@ -293,5 +293,3 @@ void DisplayBakeTime(uint16_t duration, double temperature, int duty, int integr
 
   displayDuration(10, duration);
 }
-
-
