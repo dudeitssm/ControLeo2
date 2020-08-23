@@ -9,10 +9,10 @@ extern char debugBuffer[];
 // Return false to exit this mode
 boolean Bake() {
   static int bakePhase = BAKING_PHASE_INIT;
-  static int outputType[4];
+  static int outputType[3];
   static int bakeTemperature;
   static uint16_t bakeDuration;
-  static int elementDutyCounter[4];
+  static int elementDutyCounter[3];
   static int bakeDutyCycle, bakeIntegral, counter, coolingDuration;
   static boolean isHeating;
   static long lastOverTempTime = 0;
@@ -65,7 +65,7 @@ boolean Bake() {
     case PHASE_INIT: // User has requested to start a bake
       // Start the bake, regardless of the starting temperature
       // Get the types for the outputs (elements, fan or unused)
-      for (i=0; i<4; i++)
+      for (i=0; i<3; i++)
         outputType[i] = getSetting(SETTING_D0_TYPE + i);
       // Get the bake temperature
       bakeTemperature = getSetting(SETTING_BAKE_TEMPERATURE);
@@ -112,7 +112,7 @@ boolean Bake() {
       // Stagger the element start cycle to avoid abrupt changes in current draw
       // Simple method: there are 3 outputs so space them apart equally
       for (i=0; i< 3; i++)
-        elementDutyCounter[i] = 33 * i;
+        elementDutyCounter[i] = (100/3) * i;
       break;
 
     case BAKING_PHASE_HEATUP:
