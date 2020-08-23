@@ -53,31 +53,27 @@ const char *bakingPhaseDescription[] = {"", "Heating", "Baking", "", "Cooling", 
 // EEPROM settings
 // Remember that EEPROM initializes to 0xFF after flashing the bootloader
 #define SETTING_EEPROM_NEEDS_INIT             0    // EEPROM will be initialized to 0 at first run
-#define SETTING_D4_TYPE                       1    // Element type controlled by D4 (or fan, unused)
-#define SETTING_D5_TYPE                       2    // Element type controlled by D5 (or fan, unused)
-#define SETTING_D6_TYPE                       3    // Element type controlled by D6 (or fan, unused)
-#define SETTING_D7_TYPE                       4    // Element type controlled by D7 (or fan, unused)
-#define SETTING_MAX_TEMPERATURE               5    // Maximum oven temperature.  Relow curve will be based on this (stored temp is offset by 150 degrees)
-#define SETTING_SETTINGS_CHANGED              6    // Settings have changed.  Relearn duty cycles
-#define SETTING_BAKE_TEMPERATURE              7    // The baking temperature (divided by 5)
-#define SETTING_BAKE_DURATION                 8    // The baking duration (see getBakeSeconds)
+#define SETTING_D0_TYPE                       1    // Element type controlled by D0 (or fan, unused)
+#define SETTING_D1_TYPE                       2    // Element type controlled by D1 (or fan, unused)
+#define SETTING_D2_TYPE                       3    // Element type controlled by D2 (or fan, unused)
+#define SETTING_MAX_TEMPERATURE               4    // Maximum oven temperature.  Relow curve will be based on this (stored temp is offset by 150 degrees)
+#define SETTING_SETTINGS_CHANGED              5    // Settings have changed.  Relearn duty cycles
+#define SETTING_BAKE_TEMPERATURE              6    // The baking temperature (divided by 5)
+#define SETTING_BAKE_DURATION                 7    // The baking duration (see getBakeSeconds)
 
 // Learned settings
-#define SETTING_LEARNING_MODE                 10   // ControLeo is learning oven response and will make adjustments
-#define SETTING_PRESOAK_D4_DUTY_CYCLE         11   // Duty cycle (0-100) that D4 must be used during presoak
-#define SETTING_PRESOAK_D5_DUTY_CYCLE         12   // Duty cycle (0-100) that D5 must be used during presoak
-#define SETTING_PRESOAK_D6_DUTY_CYCLE         13   // Duty cycle (0-100) that D6 must be used during presoak
-#define SETTING_PRESOAK_D7_DUTY_CYCLE         14   // Duty cycle (0-100) that D7 must be used during presoak
-#define SETTING_SOAK_D4_DUTY_CYCLE            15   // Duty cycle (0-100) that D4 must be used during soak
-#define SETTING_SOAK_D5_DUTY_CYCLE            16   // Duty cycle (0-100) that D5 must be used during soak
-#define SETTING_SOAK_D6_DUTY_CYCLE            17   // Duty cycle (0-100) that D6 must be used during soak
-#define SETTING_SOAK_D7_DUTY_CYCLE            18   // Duty cycle (0-100) that D7 must be used during soak
-#define SETTING_REFLOW_D4_DUTY_CYCLE          19   // Duty cycle (0-100) that D4 must be used during reflow
-#define SETTING_REFLOW_D5_DUTY_CYCLE          20   // Duty cycle (0-100) that D4 must be used during reflow
-#define SETTING_REFLOW_D6_DUTY_CYCLE          21   // Duty cycle (0-100) that D4 must be used during reflow
-#define SETTING_REFLOW_D7_DUTY_CYCLE          22   // Duty cycle (0-100) that D4 must be used during reflow
-#define SETTING_SERVO_OPEN_DEGREES            23   // The position the servo should be in when the door is open
-#define SETTING_SERVO_CLOSED_DEGREES          24   // The position the servo should be in when the door is closed
+#define SETTING_LEARNING_MODE                 8   // ControLeo is learning oven response and will make adjustments
+#define SETTING_PRESOAK_D0_DUTY_CYCLE         9   // Duty cycle (0-100) that D0 must be used during presoak
+#define SETTING_PRESOAK_D1_DUTY_CYCLE         10   // Duty cycle (0-100) that D1 must be used during presoak
+#define SETTING_PRESOAK_D2_DUTY_CYCLE         11   // Duty cycle (0-100) that D2 must be used during presoak
+#define SETTING_SOAK_D0_DUTY_CYCLE            12   // Duty cycle (0-100) that D0 must be used during soak
+#define SETTING_SOAK_D1_DUTY_CYCLE            13   // Duty cycle (0-100) that D1 must be used during soak
+#define SETTING_SOAK_D2_DUTY_CYCLE            14   // Duty cycle (0-100) that D2 must be used during soak
+#define SETTING_REFLOW_D0_DUTY_CYCLE          15   // Duty cycle (0-100) that D0 must be used during reflow
+#define SETTING_REFLOW_D1_DUTY_CYCLE          16   // Duty cycle (0-100) that D1 must be used during reflow
+#define SETTING_REFLOW_D2_DUTY_CYCLE          17   // Duty cycle (0-100) that D2 must be used during reflow
+#define SETTING_SERVO_OPEN_DEGREES            18   // The position the servo should be in when the door is open
+#define SETTING_SERVO_CLOSED_DEGREES          19   // The position the servo should be in when the door is closed
 
 #define TEMPERATURE_OFFSET                    150  // To allow temperature to be saved in 8-bits (0-255)
 #define BAKE_TEMPERATURE_STEP                 5    // Allows the storing of the temperature range in one byte
