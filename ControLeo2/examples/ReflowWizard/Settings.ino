@@ -37,10 +37,9 @@ void setSetting(int settingNum, int value) {
     return;
   
   switch (settingNum) {
-    case SETTING_D4_TYPE:
-    case SETTING_D5_TYPE:
-    case SETTING_D6_TYPE:
-    case SETTING_D7_TYPE:
+    case SETTING_D0_TYPE:
+    case SETTING_D1_TYPE:
+    case SETTING_D2_TYPE:
       // The element has been reconfigured so reset the duty cycles and restart learning
       EEPROM.write(SETTING_SETTINGS_CHANGED, true);
       EEPROM.write(SETTING_LEARNING_MODE, true);
@@ -116,4 +115,3 @@ uint16_t getBakeSeconds(int duration)
 
   return minutes * 60;
 }
-
