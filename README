@@ -9,10 +9,9 @@ http://www.whizoo.com/buy
 
 Building Controleo2: DIY Etched Copperclad Edition (supports 3 relays/SSR and 1 servo)--perfect for people on a tight budget.
 
-ReflowWizard software changes are a WIP, but here's what the finished product looks like (sneak peek): https://imgur.com/a/9p7RdRK
+TLDR build log and progress here: https://moltensolderlabs.com/projects/misc/reflow_oven
 
-More details, schematics, KiCAD layout, gerbers, etc, to follow soon (next few weeks)...
-3D printed PLA casing is also a WIP.
+ReflowWizard software changes are a WIP.
 
 Updating the firmware running on ControLeo2:
 http://www.whizoo.com/update
