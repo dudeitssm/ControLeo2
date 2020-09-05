@@ -10,7 +10,7 @@ char debugBuffer[100];
 
 // The data for each of pre-soak, soak and reflow phases
 struct phaseData {
-  int elementDutyCycle[4];    // Duty cycle for each output
+  int elementDutyCycle[3];    // Duty cycle for each output
   int endTemperature;         // The temperature at which to move to the next reflow phase
   int phaseMinDuration;       // The minimum number of seconds that this phase should run for
   int phaseMaxDuration;       // The maximum number of seconds that this phase should run for
@@ -20,7 +20,7 @@ struct phaseData {
 // Return false to exit this mode
 boolean Reflow() {
   static int reflowPhase = PHASE_INIT;
-  static int outputType[4];
+  static int outputType[3];
   static int maxTemperature;
   static boolean learningMode;
   static phaseData phase[PHASE_REFLOW+1];
@@ -37,19 +37,19 @@ boolean Reflow() {
   // Read the temperature
   currentTemperature = getCurrentTemperature();
   if (THERMOCOUPLE_FAULT(currentTemperature)) {
-    lcdPrintLine(0, "Thermocouple err");
+    lcdPrintLine_P(0, PSTR("Thermocouple err"));
     Serial.print(F("Thermocouple Error: "));
     switch ((int) currentTemperature) {
       case FAULT_OPEN:
-        lcdPrintLine(1, "Fault open");
+        lcdPrintLine_P(1, PSTR("Fault open"));
         Serial.println(F("Fault open"));
         break;
       case FAULT_SHORT_GND:
-        lcdPrintLine(1, "Short to GND");
+        lcdPrintLine_P(1, PSTR("Short to GND"));
         Serial.println(F("Short to ground"));
         break;
       case FAULT_SHORT_VCC:
-        lcdPrintLine(1, "Short to VCC");
+        lcdPrintLine_P(1, PSTR("Short to VCC"));
         break;
     }
     
@@ -61,8 +61,8 @@ boolean Reflow() {
   // Abort the reflow if a button is pressed
   if (getButton() != CONTROLEO_BUTTON_NONE) {
     reflowPhase = PHASE_ABORT_REFLOW;
-    lcdPrintLine(0, "Aborting reflow");
-    lcdPrintLine(1, "Button pressed");
+    lcdPrintLine_P(0, PSTR("Aborting reflow"));
+    lcdPrintLine_P(1, PSTR("Button pressed"));
     Serial.println(F("Button pressed.  Aborting reflow ..."));
   }
   
@@ -72,8 +72,8 @@ boolean Reflow() {
       // Make sure the oven is cool.  This makes for more predictable/reliable reflows and
       // gives the SSR's time to cool down a bit.
       if (currentTemperature > 50.0) {
-        lcdPrintLine(0, "Temp > 50\1C");
-        lcdPrintLine(1, "Please wait...");
+        lcdPrintLine_P(0, PSTR("Temp > 50\1C"));
+        lcdPrintLine_P(1, PSTR("Please wait..."));
         Serial.println(F("Oven too hot to start reflow.  Please wait ..."));
         
         // Abort the reflow
@@ -82,18 +82,18 @@ boolean Reflow() {
       }
     
       // Get the types for the outputs (elements, fan or unused)
-      for (i=0; i<4; i++)
-        outputType[i] = getSetting(SETTING_D4_TYPE + i);
+      for (i=0; i<3; i++)
+        outputType[i] = getSetting(SETTING_D0_TYPE + i);
       // Get the maximum temperature
       maxTemperature = getSetting(SETTING_MAX_TEMPERATURE);
 
       // Don't allow reflow if the outputs are not configured
-      for (i=0; i<4; i++)
+      for (i=0; i<3; i++)
         if (isHeatingElement(outputType[i]))
           break;
-      if (i == 4) {
-        lcdPrintLine(0, "Please configure");
-        lcdPrintLine(1, " outputs first! ");
+      if (i == 3) {
+        lcdPrintLine_P(0, PSTR("Please configure"));
+        lcdPrintLine_P(1, PSTR(" outputs first! "));
         Serial.println(F("Outputs must be configured before reflow"));
         
         // Abort the reflow
@@ -105,8 +105,8 @@ boolean Reflow() {
       if (getSetting(SETTING_SETTINGS_CHANGED) == true) {
         setSetting(SETTING_SETTINGS_CHANGED, false);
         // Tell the user that learning mode is being enabled
-        lcdPrintLine(0, "Settings changed");
-        lcdPrintLine(1, "Initializing...");
+        lcdPrintLine_P(0, PSTR("Settings changed"));
+        lcdPrintLine_P(1, PSTR("Initializing..."));
         Serial.println(F("Settings changed by user.  Reinitializing element duty cycles and enabling learning mode ..."));
         
         // Turn learning mode on
@@ -120,33 +120,33 @@ boolean Reflow() {
         //           Heat from the bottom, not much from the top
         // Reflow  = Heat the solder and pads rapidly
         //           Lots of heat from all directions
-        for (i=0; i<4; i++) {
+        for (i=0; i<3; i++) {
           switch (outputType[i]) {
             case TYPE_UNUSED:
             case TYPE_COOLING_FAN:
-              setSetting(SETTING_PRESOAK_D4_DUTY_CYCLE + i, 0);
-              setSetting(SETTING_SOAK_D4_DUTY_CYCLE + i, 0);
-              setSetting(SETTING_REFLOW_D4_DUTY_CYCLE + i, 0);
+              setSetting(SETTING_PRESOAK_D0_DUTY_CYCLE + i, 0);
+              setSetting(SETTING_SOAK_D0_DUTY_CYCLE + i, 0);
+              setSetting(SETTING_REFLOW_D0_DUTY_CYCLE + i, 0);
               break;
             case TYPE_TOP_ELEMENT:
-              setSetting(SETTING_PRESOAK_D4_DUTY_CYCLE + i, 50);
-              setSetting(SETTING_SOAK_D4_DUTY_CYCLE + i, 40);
-              setSetting(SETTING_REFLOW_D4_DUTY_CYCLE + i, 50);
+              setSetting(SETTING_PRESOAK_D0_DUTY_CYCLE + i, 50);
+              setSetting(SETTING_SOAK_D0_DUTY_CYCLE + i, 40);
+              setSetting(SETTING_REFLOW_D0_DUTY_CYCLE + i, 50);
               break;
             case TYPE_BOTTOM_ELEMENT:
-              setSetting(SETTING_PRESOAK_D4_DUTY_CYCLE + i, 80);
-              setSetting(SETTING_SOAK_D4_DUTY_CYCLE + i, 70);
-              setSetting(SETTING_REFLOW_D4_DUTY_CYCLE + i, 80);
+              setSetting(SETTING_PRESOAK_D0_DUTY_CYCLE + i, 80);
+              setSetting(SETTING_SOAK_D0_DUTY_CYCLE + i, 70);
+              setSetting(SETTING_REFLOW_D0_DUTY_CYCLE + i, 80);
               break;
             case TYPE_BOOST_ELEMENT:
-              setSetting(SETTING_PRESOAK_D4_DUTY_CYCLE + i, 30);
-              setSetting(SETTING_SOAK_D4_DUTY_CYCLE + i, 35);
-              setSetting(SETTING_REFLOW_D4_DUTY_CYCLE + i, 50);
+              setSetting(SETTING_PRESOAK_D0_DUTY_CYCLE + i, 30);
+              setSetting(SETTING_SOAK_D0_DUTY_CYCLE + i, 35);
+              setSetting(SETTING_REFLOW_D0_DUTY_CYCLE + i, 50);
               break;
             case TYPE_CONVECTION_FAN:
-              setSetting(SETTING_PRESOAK_D4_DUTY_CYCLE + i, 100);
-              setSetting(SETTING_SOAK_D4_DUTY_CYCLE + i, 100);
-              setSetting(SETTING_REFLOW_D4_DUTY_CYCLE + i, 100);
+              setSetting(SETTING_PRESOAK_D0_DUTY_CYCLE + i, 100);
+              setSetting(SETTING_SOAK_D0_DUTY_CYCLE + i, 100);
+              setSetting(SETTING_REFLOW_D0_DUTY_CYCLE + i, 100);
               break;
           }
         }
@@ -157,8 +157,8 @@ boolean Reflow() {
       // Read all the settings
       learningMode = getSetting(SETTING_LEARNING_MODE);
       for (i=PHASE_PRESOAK; i<=PHASE_REFLOW; i++) {
-        for (j=0; j<4; j++)
-          phase[i].elementDutyCycle[j] = getSetting(SETTING_PRESOAK_D4_DUTY_CYCLE + ((i-PHASE_PRESOAK) *4) + j);
+        for (j=0; j<3; j++)
+          phase[i].elementDutyCycle[j] = getSetting(SETTING_PRESOAK_D0_DUTY_CYCLE + ((i-PHASE_PRESOAK) *4) + j);
         // Time to peak temperature should be between 3.5 and 5.5 minutes.
         // While J-STD-20 gives exact phase temperatures, the reading depends very much on the thermocouple used
         // and its location.  Varying the phase temperatures as the max temperature changes allows for thermocouple
@@ -184,8 +184,8 @@ boolean Reflow() {
       }
       // Let the user know if learning mode is on
       if (learningMode) {
-        lcdPrintLine(0, "Learning Mode");
-        lcdPrintLine(1, "is enabled");
+        lcdPrintLine_P(0, PSTR("Learning Mode"));
+        lcdPrintLine_P(1, PSTR("is enabled"));
         Serial.println(F("Learning mode is enabled.  Duty cycles may be adjusted automatically if necessary"));
         delay(3000);
       }
@@ -193,13 +193,13 @@ boolean Reflow() {
       // Move to the next phase
       reflowPhase = PHASE_PRESOAK;
       lcdPrintLine(0, phaseDescription[reflowPhase]);
-      lcdPrintLine(1, "");
+      lcdPrintLine_P(1, PSTR(""));
       
       // Display information about this phase
       serialDisplayPhaseData(reflowPhase, &phase[reflowPhase], outputType);
 
       // Stagger the element start cycle to avoid abrupt changes in current draw
-      for (i=0; i< 4; i++) {
+      for (i=0; i< 3; i++) {
         elementDutyCounter[i] = elementDutyStart;
         // Turn the next element on (elementDutyCounter[i+1] == 0) when this element turns off (elementDutyCounter[i] == phase[reflowPhase].elementDutyCycle[i])
         // For example, assume two element both at 20% duty cycle.  
@@ -236,7 +236,7 @@ boolean Reflow() {
 
               // Abort this run
               lcdPrintPhaseMessage(reflowPhase, "Too fast");
-              lcdPrintLine(1, "Aborting ...");
+              lcdPrintLine_P(1, PSTR("Aborting ..."));
               reflowPhase = PHASE_ABORT_REFLOW;
               
               displayAdjustmentsMadeContinue(false);
@@ -257,7 +257,7 @@ boolean Reflow() {
         lcdPrintLine(0, phaseDescription[reflowPhase]);
         phaseStartTime = millis();
         // Stagger the element start cycle to avoid abrupt changes in current draw
-        for (i=0; i< 4; i++) {
+        for (i=0; i< 3; i++) {
           elementDutyCounter[i] = elementDutyStart;
           // Turn the next element on (elementDutyCounter[i+1] == 0) when this element turns off (elementDutyCounter[i] == phase[reflowPhase].elementDutyCycle[i])
           // For example, assume two element both at 20% duty cycle.  
@@ -294,7 +294,7 @@ boolean Reflow() {
               
             // Abort this run
             lcdPrintPhaseMessage(reflowPhase, "Too slow");
-            lcdPrintLine(1, "Aborting ...");
+            lcdPrintLine_P(1, PSTR("Aborting ..."));
             reflowPhase = PHASE_ABORT_REFLOW;
             displayAdjustmentsMadeContinue(false);
           }
@@ -308,7 +308,7 @@ boolean Reflow() {
           Serial.println(F("Duty cycles increased slightly for future runs"));
             
           // Turn all the elements on to get to temperature quickly
-          for (i=0; i<4; i++) {
+          for (i=0; i<3; i++) {
             switch(outputType[i]) {
               case TYPE_BOTTOM_ELEMENT:
                 phase[reflowPhase].elementDutyCycle[i] = 100;
@@ -328,7 +328,7 @@ boolean Reflow() {
             phase[reflowPhase].phaseMaxDuration += 10;
           else {
             lcdPrintPhaseMessage(reflowPhase, "Too slow");
-            lcdPrintLine(1, "Aborting ...");
+            lcdPrintLine_P(1, PSTR("Aborting ..."));
             reflowPhase = PHASE_ABORT_REFLOW;
             Serial.println(F("Aborting reflow.  Oven cannot reach required temperature!"));
           }
@@ -336,20 +336,20 @@ boolean Reflow() {
       }
       
       // Turn the output on or off based on its duty cycle
-      for (i=0; i< 4; i++) {
+      for (i=0; i< 3; i++) {
         // Skip unused elements and cooling fan
         if (outputType[i] == TYPE_UNUSED || outputType[i] == TYPE_COOLING_FAN)
           continue;
         // Turn all the elements on at the start of the presoak
         if (reflowPhase == PHASE_PRESOAK && currentTemperature < (phase[reflowPhase].endTemperature * 3 / 5) - 10) {
-          digitalWrite(4 + i, HIGH);
+          digitalWrite(i, HIGH);
           continue;
         }
         // Turn the output on at 0, and off at the duty cycle value
         if (elementDutyCounter[i] == 0)
-          digitalWrite(4 + i, HIGH);
+          digitalWrite(i, HIGH);
         if (elementDutyCounter[i] == phase[reflowPhase].elementDutyCycle[i])
-          digitalWrite(4 + i, LOW);
+          digitalWrite(i, LOW);
         // Increment the duty counter
         elementDutyCounter[i] = (elementDutyCounter[i] + 1) % 100;
       }
@@ -367,14 +367,14 @@ boolean Reflow() {
       if (firstTimeInPhase) {
         firstTimeInPhase = false;
         // Update the display
-        lcdPrintLine(0, "Reflow");
-        lcdPrintLine(1, " ");
+        lcdPrintLine_P(0, PSTR("Reflow"));
+        lcdPrintLine_P(1, PSTR(" "));
         Serial.println(F("******* Phase: Waiting *******"));
         Serial.println(F("Turning all heating elements off ..."));
         // Make sure all the elements are off (keep convection fans on)
-        for (int i=0; i<4; i++) {
+        for (int i=0; i<3; i++) {
           if (outputType[i] != TYPE_CONVECTION_FAN)
-            digitalWrite(i+4, LOW);
+            digitalWrite(i, LOW);
         }
         // If we made it here it means the reflow is within the defined parameters.  Turn off learning mode
         setSetting(SETTING_LEARNING_MODE, false);
@@ -400,7 +400,7 @@ boolean Reflow() {
       if (firstTimeInPhase) {
         firstTimeInPhase = false;
         // Update the display
-        lcdPrintLine(0, "Cool - open door");
+        lcdPrintLine_P(0, PSTR("Cool - open door"));
         Serial.println(F("******* Phase: Cooling *******"));
         Serial.println(F("Open the oven door ..."));
         // If a servo is attached, use it to open the door over 10 seconds
@@ -409,9 +409,9 @@ boolean Reflow() {
         playTones(TUNE_REFLOW_DONE);
 
         // Turn on the cooling fan
-        for (int i=0; i<4; i++) {
+        for (int i=0; i<3; i++) {
           if (outputType[i] == TYPE_COOLING_FAN)
-            digitalWrite(i+4, HIGH);
+            digitalWrite(i, HIGH);
         }
       }
       // Update the temperature roughly once per second
@@ -429,8 +429,8 @@ boolean Reflow() {
       if (firstTimeInPhase) {
         firstTimeInPhase = false;
         // Update the display
-        lcdPrintLine(0, "Okay to remove  ");
-        lcdPrintLine(1, "          boards");
+        lcdPrintLine_P(0, PSTR("Okay to remove  "));
+        lcdPrintLine_P(1, PSTR("          boards"));
         // Play a tune to let the user know the boards can be removed
         playTones(TUNE_REMOVE_BOARDS);
       }
@@ -441,15 +441,15 @@ boolean Reflow() {
       // Once the temperature drops below 50C a new reflow can be started
       if (currentTemperature < 50.0) {
         reflowPhase = PHASE_ABORT_REFLOW;
-        lcdPrintLine(0, "Reflow complete!");
-        lcdPrintLine(1, " ");
+        lcdPrintLine_P(0, PSTR("Reflow complete!"));
+        lcdPrintLine_P(1, PSTR(" "));
       }
       break;
       
     case PHASE_ABORT_REFLOW: // The reflow must be stopped now
       Serial.println(F("Reflow is done!"));
       // Turn all elements and fans off
-      for (i = 4; i < 8; i++)
+      for (i = 0; i < 3; i++)
         digitalWrite(i, LOW);
       // Close the oven door now, over 3 seconds
       setServoPosition(getSetting(SETTING_SERVO_CLOSED_DEGREES), 3000);
@@ -469,12 +469,12 @@ boolean Reflow() {
 void adjustPhaseDutyCycle(int phase, int adjustment) {
   sprintf(debugBuffer, "Adjusting duty cycles for %s phase by %d", phaseDescription[phase], adjustment);
   Serial.println(debugBuffer);
-  // Loop through the 4 outputs
-  for (int i=0; i< 4; i++) {
-    int dutySetting = SETTING_PRESOAK_D4_DUTY_CYCLE + ((phase-1) * 4) + i;
+  // Loop through the 3 outputs
+  for (int i=0; i< 3; i++) {
+    int dutySetting = SETTING_PRESOAK_D0_DUTY_CYCLE + ((phase-1) * 3) + i;
     int newDutyCycle = getSetting(dutySetting) + adjustment;
 
-    switch (getSetting(SETTING_D4_TYPE + i)) {
+    switch (getSetting(SETTING_D0_TYPE + i)) {
       case TYPE_BOOST_ELEMENT:
         // To avoid overstressing the boost element (which is just a mold heater), don't allow more than a 60% duty cycle
         // Also, this element is probably not optimally located in the oven and running it too hot may create an imbalance
@@ -493,7 +493,7 @@ void adjustPhaseDutyCycle(int phase, int adjustment) {
         continue;
     }
     
-    sprintf(debugBuffer, "D%d (%s) changed from %d to %d", i+4, outputDescription[getSetting(SETTING_D4_TYPE + i)], getSetting(dutySetting), newDutyCycle);
+    sprintf(debugBuffer, "D%d (%s) changed from %d to %d", i, outputDescription[getSetting(SETTING_D0_TYPE + i)], getSetting(dutySetting), newDutyCycle);
     Serial.println(debugBuffer);
     // Save the new duty cycle
     setSetting(dutySetting, newDutyCycle);
@@ -523,8 +523,8 @@ void serialDisplayPhaseData(int phase, struct phaseData *pd, int *outputType) {
   sprintf(debugBuffer, "End temperature = %d Celsius", pd->endTemperature);
   Serial.println(debugBuffer);
   Serial.println(F("Duty cycles: "));
-  for (int i=0; i<4; i++) {
-    sprintf(debugBuffer, "  D%d = %d  (%s)", i+4, pd->elementDutyCycle[i], outputDescription[outputType[i]]);
+  for (int i=0; i<3; i++) {
+    sprintf(debugBuffer, "  D%d = %d  (%s)", i, pd->elementDutyCycle[i], outputDescription[outputType[i]]);
     Serial.println(debugBuffer);
   }
 }
@@ -580,7 +580,7 @@ void displayAdjustmentsMadeContinue(boolean willContinue) {
   counterTemp += dir;
   return counterTemp;
   
-/*  if (diff[phase] > 0 && counterTemp > tempChange[phase])
+  if (diff[phase] > 0 && counterTemp > tempChange[phase])
     phase++;
   else if (diff[phase] < 0 && counterTemp < tempChange[phase])
     phase++;
