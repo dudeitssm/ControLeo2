@@ -17,8 +17,8 @@ boolean Testing() {
   // Is this the first time "Testing" has been run?
   if (firstRun) {
     firstRun = false;
-    lcdPrintLine(0, "Test Outputs");
-    lcdPrintLine(1, "Output 0");
+    lcdPrintLine_P(0, PSTR("Test Outputs"));
+    lcdPrintLine_P(1, PSTR("Output 0"));
     displayOnState(channelIsOn);
   }
   
