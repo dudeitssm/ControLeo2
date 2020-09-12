@@ -23,7 +23,7 @@
 // the timer counts from 0 to 2,000,000 in one second.  We'd like the interrupt to fire 50 times per second so we set
 // the compare register OCR1A to 2,000,000 / 50 = 40,000.
 
-#define SERVO_PIN               3     // The I/O pin used for the servo
+#define SERVO_PIN               30     // The I/O pin used for the servo
 #define MIN_PULSE_WIDTH       544     // The shortest pulse sent to a servo (from Arduino's servo library)
 #define MAX_PULSE_WIDTH      2400     // The longest pulse sent to a servo (from Arduino's servo library)
 
