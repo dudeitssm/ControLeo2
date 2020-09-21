@@ -210,8 +210,8 @@ boolean Bake() {
       bakePhase = BAKING_PHASE_COOLING;
       lcdPrintLine(0, bakingPhaseDescription[bakePhase]);
 
-      // If a servo is attached, use it to open the door over 10 seconds
-      setServoPosition(getSetting(SETTING_SERVO_OPEN_DEGREES), 10000);
+      // If a servo is attached, use it to open the door over 3 seconds
+      setServoPosition(getSetting(SETTING_SERVO_OPEN_DEGREES), 3000);
       // Play a tune to let the user know the door should be opened
       playTones(TUNE_REFLOW_DONE);
 
