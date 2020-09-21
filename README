@@ -1,5 +1,5 @@
-ControLeo2 Reflow Oven Controller (DIY Etched Copperclad PCB Edition, WIP)
-==========================================================================
+ControLeo2 Reflow Oven Controller (DIY Etched Copperclad PCB Edition)
+=====================================================================
 
 Reflow oven build guide:
 http://www.whizoo.com/reflowoven
@@ -7,11 +7,8 @@ http://www.whizoo.com/reflowoven
 Buying ControLeo2:
 http://www.whizoo.com/buy
 
-Building Controleo2: DIY Etched Copperclad Edition (supports 3 relays/SSR and 1 servo)--perfect for people on a tight budget.
-
-TLDR build log and progress here: https://moltensolderlabs.com/projects/misc/reflow_oven
-
-ReflowWizard software changes are a WIP.
+Building Controleo2: DIY Etched Copperclad Edition (supports 3 relays/SSRs and 1 servo) -- perfect for people on a tight budget.
+TLDR build log here: https://moltensolderlabs.com/projects/misc/reflow_oven
 
 Updating the firmware running on ControLeo2:
 http://www.whizoo.com/update
@@ -84,7 +81,7 @@ Reflow Wizard
 *      - Minor tweaks to learning mode, to reduce number of times this needs to
 *        be run.
 *
-* modified (WIP) for DIY Toner Transfer Etched Copperclad Build
+* modified for DIY Toner Transfer Etched Copperclad Build
 * by dudeitssm (https://github.com/dudeitssm)
 
 Oven door servo:
