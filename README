@@ -7,7 +7,7 @@ http://www.whizoo.com/reflowoven
 Buying ControLeo2:
 http://www.whizoo.com/buy
 
-Building Controleo2: DIY Etched Copperclad Edition (supports 3 relays/SSRs and 1 servo) -- perfect for people on a tight budget. More extensive build log here: https://moltensolderlabs.com/projects/misc/reflow_oven
+Building ControLeo2: DIY Etched Copperclad Edition (supports 3 relays/SSRs and 1 servo) -- perfect for people on a tight budget. More extensive build log here: https://moltensolderlabs.com/projects/misc/reflow_oven
 
 Updating the firmware running on ControLeo2:
 http://www.whizoo.com/update
@@ -17,6 +17,7 @@ This is the GitHub source code repository for ControLeo2.  ControLeo2 is an Ardu
 In this folder are:
 1. README - this file
 2. A "ControLeo2” folder.  This is an Arduino library and examples for ControLeo2
+3. A "build" folder. This contains project files specifically for this DIY-built edition.
 
 To install the ControLeo2 library, please refer to:
 http://arduino.cc/en/Guide/Libraries or http://www.whizoo.com/update
