@@ -25,7 +25,7 @@ boolean Reflow() {
   static boolean learningMode;
   static phaseData phase[PHASE_REFLOW+1];
   static unsigned long phaseStartTime, reflowStartTime;
-  static int elementDutyCounter[4];
+  static int elementDutyCounter[3];
   static int counter = 0;
   static boolean firstTimeInPhase = true;
   
@@ -314,7 +314,7 @@ boolean Reflow() {
                 phase[reflowPhase].elementDutyCycle[i] = 100;
                 break;
               case TYPE_TOP_ELEMENT:
-                phase[reflowPhase].elementDutyCycle[i] = 80;
+                phase[reflowPhase].elementDutyCycle[i] = 100;
                 break;
               case TYPE_BOOST_ELEMENT:
                 phase[reflowPhase].elementDutyCycle[i] = 60;
@@ -403,8 +403,8 @@ boolean Reflow() {
         lcdPrintLine_P(0, PSTR("Cool - open door"));
         Serial.println(F("******* Phase: Cooling *******"));
         Serial.println(F("Open the oven door ..."));
-        // If a servo is attached, use it to open the door over 10 seconds
-        setServoPosition(getSetting(SETTING_SERVO_OPEN_DEGREES), 10000);
+        // If a servo is attached, use it to open the door over 3 seconds
+        setServoPosition(getSetting(SETTING_SERVO_OPEN_DEGREES), 3000);
         // Play a tune to let the user know the door should be opened
         playTones(TUNE_REFLOW_DONE);
 
@@ -471,7 +471,7 @@ void adjustPhaseDutyCycle(int phase, int adjustment) {
   Serial.println(debugBuffer);
   // Loop through the 3 outputs
   for (int i=0; i< 3; i++) {
-    int dutySetting = SETTING_PRESOAK_D0_DUTY_CYCLE + ((phase-1) * 3) + i;
+    int dutySetting = SETTING_PRESOAK_D0_DUTY_CYCLE + ((phase-1) * 4) + i;
     int newDutyCycle = getSetting(dutySetting) + adjustment;
 
     switch (getSetting(SETTING_D0_TYPE + i)) {
@@ -481,8 +481,8 @@ void adjustPhaseDutyCycle(int phase, int adjustment) {
         newDutyCycle = constrain(newDutyCycle, 0, 60);
         break;
       case TYPE_TOP_ELEMENT:
-        // With IR radiation (if oven has IR elements) and insulation just above it, don't allow more than 80% duty cycle
-        newDutyCycle = constrain(newDutyCycle, 0, 80);
+        // Allow 100% duty cycle for the top element
+        newDutyCycle = constrain(newDutyCycle, 0, 100);
         break;
       case TYPE_BOTTOM_ELEMENT:
         // Allow 100% duty cycle for the bottom element, since all heat will hit the aluminum tray
