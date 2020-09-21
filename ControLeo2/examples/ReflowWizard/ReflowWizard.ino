@@ -149,8 +149,8 @@ void setup() {
   initializeTimer();
 
   // Write the initial message on the LCD screen
-  lcdPrintLine_P(0, PSTR("   ControLeo2"));
-  lcdPrintLine_P(1, PSTR("Reflow Oven v2.0"));
+  lcdPrintLine_P(0, PSTR("  ClonetroLeo2  "));
+  lcdPrintLine_P(1, PSTR("Reflow Oven v1.0"));
   delay(100);
   playTones(TUNE_STARTUP);
   delay(3000);
